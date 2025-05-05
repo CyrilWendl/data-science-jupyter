@@ -1,0 +1,30 @@
+image: python:3.11
+
+stages:
+  - build
+  - deploy
+
+before_script:
+  - pip install --upgrade pip
+  - pip install jupyterlite jupyter_server jupyterlite-pyodide-kernel
+
+build:
+  stage: build
+  script:
+    - echo "Creating jupyter lite bundle"
+    # Build JupyterLite site
+    - jupyter lite build --lite-dir . --output-dir public
+  artifacts:
+    paths:
+      - public
+
+pages:
+  stage: deploy
+  script:
+    - echo "Deploying to GitLab Pages"
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
+
